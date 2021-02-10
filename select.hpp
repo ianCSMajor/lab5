@@ -11,7 +11,39 @@ public:
     // Return true if the specified row should be selected.
     virtual bool select(const Spreadsheet* sheet, int row) const = 0;
 };
+class Select_Contains
+{
+private:
+int column;
+string cell_string;
+string data;
+public:
+	Select_Contains(const Spreadsheet* sheetl, string column1, string substring)
+	{	
+		column = sheet->get_column_by_name(column1);
+		cell_string = substring;	
+	}
+	virtual bool select(const Spreadsheet* sheet, int row) const
+	{
+		data = select(sheet->cell_data(row, column);
+		if(data.find(cell_string) != std::string::npos){
+			return true;
+		}
+		return false;
+	}
+		
+};	
+class Select_Not
+{
+	private:
 
+	public:
+		Select_Not(Select_Contains obj*)
+		{
+			
+		}
+
+};
 // A common type of criterion for selection is to perform a comparison based on
 // the contents of one column.  This class contains contains the logic needed
 // for dealing with columns. Note that this class is also an abstract base

@@ -38,13 +38,10 @@ class Select_Column: public Select
 {
 protected:
     int column;
-	Spreadsheet* sheet_new;
-	std::string& name1;
 public:
+	Select_Column(){}
     Select_Column(const Spreadsheet* sheet, const std::string& name)
     {
-		sheet_new = sheet;
-		name1 = name; 
         column = sheet->get_column_by_name(name);
     }
 
@@ -64,7 +61,7 @@ class Select_Contains: public Select_Column
 	public:
 
 	Select_Contains(const Spreadsheet* sheetl, std::string column1, std::string substring, const std::string& name)
-		:Select_Column(sheet_new, name1)
+		:Select_Column()
 		{
 		//sheet = sheet1;	
 		//column = sheet->get_column_by_name(column1);

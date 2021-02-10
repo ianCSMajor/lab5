@@ -11,15 +11,18 @@ public:
     // Return true if the specified row should be selected.
     virtual bool select(const Spreadsheet* sheet, int row) const = 0;
 };
-class Select_Contains
+class Select_Contains: public Select_Column
 {
 private:
+Spreadsheet* sheet;
 int column;
-string cell_string;
-string data;
+std::string cell_string;
+std::string data;
 public:
-	Select_Contains(const Spreadsheet* sheetl, string column1, string substring)
-	{	
+	Select_Contains(const Spreadsheet* sheetl, std::string column1, std::string substring)
+		:Select_Column(sheet, name)
+	{
+		sheet = sheet1;	
 		column = sheet->get_column_by_name(column1);
 		cell_string = substring;	
 	}
@@ -33,16 +36,17 @@ public:
 	}
 		
 };	
-class Select_Not
+class Select_Not: public Select_Contains
 {
 	private:
 
 	public:
 		Select_Not(Select_Contains obj*)
-		{
-			
-		}
+			:Select_Contains(sheet1, column1, substring){}
 
+		virtual bool select(const Spreadsheet* sheet1, int row) const{		
+			return !(Select_Contains->select(sheet, row));
+				}
 };
 // A common type of criterion for selection is to perform a comparison based on
 // the contents of one column.  This class contains contains the logic needed

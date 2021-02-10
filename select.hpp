@@ -9,33 +9,33 @@ public:
     virtual ~Select() = default;
 
     // Return true if the specified row should be selected.
-    virtual bool select(const Spreadsheet* sheet, int row) const = 0;
+    virtual bool select(const Spreadsheet* sheet, int row) const =0;
 };
-class Select_Contains: public Select_Column
+class Select_Contain: public Select_Column
 {
-private:
-Spreadsheet* sheet;
-int column;
-std::string cell_string;
-std::string data;
-public:
-	Select_Contains(const Spreadsheet* sheetl, std::string column1, std::string substring)
-		:Select_Column(sheet, name)
-	{
-		sheet = sheet1;	
-		column = sheet->get_column_by_name(column1);
-		cell_string = substring;	
-	}
-	virtual bool select(const Spreadsheet* sheet, int row) const
-	{
-		data = select(sheet->cell_data(row, column);
-		if(data.find(cell_string) != std::string::npos){
-			return true;
-		}
-		return false;
-	}
-		
-};	
+  private:
+        const Spreadsheet* sheet;
+        int  column;
+        std::string  cell_string;
+
+  public:
+        Select_Contain(const Spreadsheet* sheet1, const std::string& column1, const std::string& s)
+        {
+                sheet=sheet1;
+                column= sheet->get_column_by_name(column1);
+                cell_string=s;
+
+        }
+        virtual bool select(const Spreadsheet* sheet1, int row) const
+        {
+                if(sheet->cell_data(row,column).find(cell_string)!= std::string::npos)
+                {
+                        return true;
+                }
+                return false;
+        }
+
+};
 class Select_Not: public Select_Contains
 {
 	private:

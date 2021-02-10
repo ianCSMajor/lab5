@@ -13,40 +13,54 @@ public:
 };
 class Select_Contains: public Select_Column
 {
-private:
-Spreadsheet* sheet;
-int column;
-std::string cell_string;
-std::string data;
-public:
+	private:
+	//int column;
+	std::string cell_string;
+	public:
+
 	Select_Contains(const Spreadsheet* sheetl, std::string column1, std::string substring)
 		:Select_Column(sheet, name)
 	{
-		sheet = sheet1;	
-		column = sheet->get_column_by_name(column1);
+		//sheet = sheet1;	
+		//column = sheet->get_column_by_name(column1);
 		cell_string = substring;	
 	}
 	virtual bool select(const Spreadsheet* sheet, int row) const
 	{
-		data = select(sheet->cell_data(row, column);
-		if(data.find(cell_string) != std::string::npos){
+		if(sheet->cell_data(row, column).find(cell_string) != std::string::npos){
 			return true;
 		}
 		return false;
 	}
 		
 };	
-class Select_Not: public Select_Contains
+class Select_Not: public Select
 {
 	private:
-
+	Select *select = nullptr; 
 	public:
-		Select_Not(Select_Contains obj*)
-			:Select_Contains(sheet1, column1, substring){}
+		Select_Not(Select* new_select){
+		select = new_select;}
+		
+			//:Select(sheet1, column1, substring){}
 
 		virtual bool select(const Spreadsheet* sheet1, int row) const{		
-			return !(Select_Contains->select(sheet, row));
+			return !(select->select(sheet1, row));
 				}
+~Select_Not(){ delete select;}
+};
+class Select_And: public Select_Not
+{
+	private:
+	//different constructor //two select pointers //two differerent select contains //two different deletes //if statement if it contains the object
+	public:
+	Select_And(Select_Contains obj*, Select_Not obj2*)
+		:Select_Contains(sheet1, column1, substring){}
+	virtual bool select(const Spreadsheet* sheet1, int row) const{
+		
+		}		
+
+
 };
 // A common type of criterion for selection is to perform a comparison based on
 // the contents of one column.  This class contains contains the logic needed

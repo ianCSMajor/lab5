@@ -16,11 +16,13 @@ TEST(AndTest, Works){
     sheet.add_row({"Dominick","Dole","22","communications"});
     sheet.add_row({"George","Genius","9","astrophysics"});
 
+    std::stringstream ss;
+   
     Select_And* cell = new Select_And(new Select_Contains(&sheet, 
                                      "Last", "Summers"), new Select_Contains(&sheet, "Age", "21"))
     sheet.set_selection(cell);
-
-    EXPECT_EQ(cell->select(&sheet, 4));
+    EXPECT_EQ( ss.str();, "Sarah Summers 21 computer science \n");
+    //EXPECT_EQ(cell->select(&sheet, 4));
 }
 TEST(OrTest, Works2){
       Spreadsheet sheet;

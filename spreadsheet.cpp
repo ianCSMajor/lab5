@@ -40,8 +40,9 @@ int Spreadsheet::get_column_by_name(const std::string& name) const
             return i;
     return -1;
 }
-void Spreadsheet::print_selection(std::ostream& out)const{
-	if(select==NULL){
+void Spreadsheet::print_selection(std::ostream& out) const
+{
+    if(select==NULL){
 		for(int i=0;i<data.size();i++){
 			for(int j=0;j<column_names.size();j++){
 				out <<data[i][j]<< " ";

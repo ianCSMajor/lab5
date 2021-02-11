@@ -1,8 +1,7 @@
-#ifndef __SELECT_HPP__
-#define __SELECT_HPP__
-
 #include <cstring>
-
+#include <iostream>
+#include "Spreadsheet.hpp"
+using namespace std;
 class Select
 {
 public:
@@ -11,55 +10,21 @@ public:
     // Return true if the specified row should be selected.
     virtual bool select(const Spreadsheet* sheet, int row) const = 0;
 };
-class Select_Contains: public Select_Column
-{
-	private:
-	//int column;
-	std::string cell_string;
-	public:
 
-	Select_Contains(const Spreadsheet* sheetl, std::string column1, std::string substring)
-		:Select_Column(sheet, name)
-	{
-		//sheet = sheet1;	
-		//column = sheet->get_column_by_name(column1);
-		cell_string = substring;	
-	}
-	virtual bool select(const Spreadsheet* sheet, int row) const
-	{
-		if(sheet->cell_data(row, column).find(cell_string) != std::string::npos){
-			return true;
-		}
-		return false;
-	}
-		
-};	
 class Select_Not: public Select
 {
 	private:
-	Select *select = nullptr; 
+	Select *select_ptr = nullptr; 
 	public:
 		Select_Not(Select* new_select){
-		select = new_select;}
+		select_ptr = new_select;}
 		
 			//:Select(sheet1, column1, substring){}
 
 		virtual bool select(const Spreadsheet* sheet1, int row) const{		
-			return !(select->select(sheet1, row));
+			return !(select_ptr->select(sheet1, row));
 				}
-~Select_Not(){ delete select;}
-};
-class Select_And: public Select_Not
-{
-	private:
-	//different constructor //two select pointers //two differerent select contains //two different deletes //if statement if it contains the object
-	public:
-	Select_And(Select_Contains obj*, Select_Not obj2*)
-		:Select_Contains(sheet1, column1, substring){}
-	virtual bool select(const Spreadsheet* sheet1, int row) const{
-		
-		}		
-
+~Select_Not(){ delete select_ptr;}
 
 };
 // A common type of criterion for selection is to perform a comparison based on
@@ -74,6 +39,7 @@ class Select_Column: public Select
 protected:
     int column;
 public:
+	Select_Column(){}
     Select_Column(const Spreadsheet* sheet, const std::string& name)
     {
         column = sheet->get_column_by_name(name);
@@ -87,5 +53,57 @@ public:
     // Derived classes can instead implement this simpler interface.
     virtual bool select(const std::string& s) const = 0;
 };
+class Select_Contains: public Select_Column
+{
+	private:
+	//int column;
+	std::string cell_string;
+	public:
 
-#endif //__SELECT_HPP__
+	Select_Contains(const Spreadsheet* sheetl, std::string column1, std::string substring, const std::string& name)
+		:Select_Column()
+		{
+		//sheet = sheet1;	
+		//column = sheet->get_column_by_name(column1);
+		cell_string = substring;	
+		}
+	virtual bool select(const Spreadsheet* sheet, int row) const 
+	{
+		if(sheet->cell_data(row, column).find(cell_string) != std::string::npos){
+			return true;
+		}
+		return false;
+	}
+		~Select_Contains(){}
+};
+class Select_And: public Select
+{
+	//different constructor //two select pointers //two differerent select contains //two different deletes //if statement if it contains the object
+		private:
+	Select* arg;
+	Select* arg2;
+	public:
+	Select_And(Select* obj, Select* obj2)
+		:Select(){ arg = obj; arg2 = obj2;}
+	virtual bool select(const Spreadsheet* sheet1, int row) const{
+		return (arg->select(sheet1, row) && arg2->select(sheet1, row)); 
+		}
+	~Select_And(){delete arg;
+		delete arg2;}
+};
+class Select_Or: public Select
+{
+	private:
+	Select* arg;
+	Select* arg2;
+	public:
+	Select_Or(Select* obj, Select* obj2)
+		:Select(){ arg = obj; arg2 = obj2;}
+	virtual bool select(const Spreadsheet* sheet1, int row) const{
+		return (arg->select(sheet1, row) || arg2->select(sheet1, row)); 
+		}
+	~Select_Or(){delete arg;
+		delete arg2;}
+
+
+};	

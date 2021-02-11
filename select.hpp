@@ -1,6 +1,6 @@
 #include <cstring>
 #include <iostream>
-#include "Spreadsheet.hpp"
+#include "spreadsheet.hpp"
 using namespace std;
 class Select
 {
@@ -53,18 +53,18 @@ public:
     // Derived classes can instead implement this simpler interface.
     virtual bool select(const std::string& s) const = 0;
 };
-class Select_Contains: public Select_Column
+class Select_Contains: public Select
 {
 	private:
-	//int column;
+	const Spreadsheet* sheet;
+	int column;
 	std::string cell_string;
 	public:
 
-	Select_Contains(const Spreadsheet* sheetl, std::string column1, std::string substring, const std::string& name)
-		:Select_Column()
+	Select_Contains(const Spreadsheet* sheet2, std::string column1, std::string substring)
 		{
-		//sheet = sheet1;	
-		//column = sheet->get_column_by_name(column1);
+		sheet = sheet2;	
+		column = sheet->get_column_by_name(column1);
 		cell_string = substring;	
 		}
 	virtual bool select(const Spreadsheet* sheet, int row) const 

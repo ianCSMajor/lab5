@@ -1,5 +1,6 @@
 #include <cstring>
 #include <iostream>
+
 #include "spreadsheet.hpp"
 using namespace std;
 class Select
@@ -53,6 +54,7 @@ public:
     // Derived classes can instead implement this simpler interface.
     virtual bool select(const std::string& s) const = 0;
 };
+
 class Select_Contains: public Select
 {
 	private:

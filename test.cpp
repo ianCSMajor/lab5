@@ -1,3 +1,4 @@
+
 #include "gtest/gtest.h"
 #include "select.hpp"
 
@@ -56,9 +57,6 @@ TEST(ContainsTest, Substring){
     sheet.add_row({"David","Dole","22","electrical engineering"});
     sheet.add_row({"Dominick","Dole","22","communications"});
     sheet.add_row({"George","Genius","9","astrophysics"});
-
-    Select_Contains* cell2 = new Select_Contains(new Select_Contains(&sheet, 
-                                     "First", "Car"));
 
     sheet.set_selection(cell2);
 

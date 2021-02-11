@@ -1,62 +1,38 @@
-#include "spreadsheet.hpp"
-#include "select.hpp"
 
-#include <algorithm>
-#include <iostream>
+#include <string>
+#include <initializer_list>
+#include <vector>
+#include <iosfwd>
 
-Spreadsheet::~Spreadsheet()
-{
-    delete select;
-}
+class Select;
 
-void Spreadsheet::set_selection(Select* new_select)
+class Spreadsheet
 {
-    delete select;
-    select = new_select;
-}
+    std::vector<std::string> column_names;
+    std::vector<std::vector<std::string> > data;
+    Select* select = nullptr;
 
-void Spreadsheet::clear()
-{
-    column_names.clear();
-    data.clear();
-    delete select;
-    select = nullptr;
-}
+public:
+    ~Spreadsheet();
 
-void Spreadsheet::set_column_names(const std::vector<std::string>& names)
-{
-    column_names=names;
-}
+    const std::string& cell_data(int row, int column) const
+    {
+        return data.at(row).at(column);
+    }
 
-void Spreadsheet::add_row(const std::vector<std::string>& row_data)
-{
-    data.push_back(row_data);
-}
+    std::string& cell_data(int row, int column)
+    {
+        return data.at(row).at(column);
+    }
 
-int Spreadsheet::get_column_by_name(const std::string& name) const
-{
-    for(int i=0; i<column_names.size(); i++)
-        if(column_names.at(i) == name)
-            return i;
-    return -1;
-}
-void Spreadsheet::print_selection(std::ostream& out) const
-{
-    if(select==NULL){
-		for(int i=0;i<data.size();i++){
-			for(int j=0;j<column_names.size();j++){
-				out <<data[i][j]<< " ";
-			}
-			out <<std::endl;
-		}
-	}else{
-		for(int i=0;i<data.size();i++){
-                        for(int j=0;j<column_names.size();j++){
-                                if(select->select(this,i))
-				 out <<data[i][j]<< " ";
-                        }
-			if(select->select(this,i))
-                         out <<std::endl;
-                }	
-	}
-}
+    void set_selection(Select* new_select);
+
+    // TODO: Implement print_selection.
+    void print_selection(std::ostream& out) const;
+    
+
+    void clear();
+    void set_column_names(const std::vector<std::string>& names);
+    void add_row(const std::vector<std::string>& row_data);
+    int get_column_by_name(const std::string& name) const;
+};

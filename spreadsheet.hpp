@@ -1,41 +1,62 @@
-#ifndef __SPREADSHEET_HPP__
-#define __SPREADSHEET_HPP__
+#include "spreadsheet.hpp"
+#include "select.hpp"
 
-#include <string>
-#include <initializer_list>
-#include <vector>
-#include <iosfwd>
+#include <algorithm>
+#include <iostream>
 
-class Select;
-
-class Spreadsheet
+Spreadsheet::~Spreadsheet()
 {
-    std::vector<std::string> column_names;
-    std::vector<std::vector<std::string> > data;
-    Select* select = nullptr;
+    delete select;
+}
 
-public:
-    ~Spreadsheet();
+void Spreadsheet::set_selection(Select* new_select)
+{
+    delete select;
+    select = new_select;
+}
 
-    const std::string& cell_data(int row, int column) const
-    {
-        return data.at(row).at(column);
-    }
+void Spreadsheet::clear()
+{
+    column_names.clear();
+    data.clear();
+    delete select;
+    select = nullptr;
+}
 
-    std::string& cell_data(int row, int column)
-    {
-        return data.at(row).at(column);
-    }
+void Spreadsheet::set_column_names(const std::vector<std::string>& names)
+{
+    column_names=names;
+}
 
-    void set_selection(Select* new_select);
+void Spreadsheet::add_row(const std::vector<std::string>& row_data)
+{
+    data.push_back(row_data);
+}
 
-    // TODO: Implement print_selection.
-    void print_selection(std::ostream& out) const;
-
-    void clear();
-    void set_column_names(const std::vector<std::string>& names);
-    void add_row(const std::vector<std::string>& row_data);
-    int get_column_by_name(const std::string& name) const;
-};
-
-#endif //__SPREADSHEET_HPP__
+int Spreadsheet::get_column_by_name(const std::string& name) const
+{
+    for(int i=0; i<column_names.size(); i++)
+        if(column_names.at(i) == name)
+            return i;
+    return -1;
+}
+void Spreadsheet::print_selection(std::ostream& out) const
+{
+    if(select==NULL){
+		for(int i=0;i<data.size();i++){
+			for(int j=0;j<column_names.size();j++){
+				out <<data[i][j]<< " ";
+			}
+			out <<std::endl;
+		}
+	}else{
+		for(int i=0;i<data.size();i++){
+                        for(int j=0;j<column_names.size();j++){
+                                if(select->select(this,i))
+				 out <<data[i][j]<< " ";
+                        }
+			if(select->select(this,i))
+                         out <<std::endl;
+                }	
+	}
+}
